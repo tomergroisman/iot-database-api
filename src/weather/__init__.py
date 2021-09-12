@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from utils import create_database, drop_database
+from services.api import create_database, drop_database
 
 weather = Blueprint('weather', __name__)
 

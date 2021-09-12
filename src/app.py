@@ -1,5 +1,6 @@
 from flask import Flask
 
+from database import database
 from weather import weather
 
 # Create Flask instance
@@ -11,6 +12,9 @@ app = Flask(__name__)
 def health_check():
     return "Healthy"
 
+
+# weather routes
+app.register_blueprint(database, url_prefix='/database')
 
 # weather routes
 app.register_blueprint(weather, url_prefix='/weather')
