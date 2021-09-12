@@ -17,20 +17,20 @@ def create_database_api():
 
     """
     try:
-        user, password, db_name, *_ = _extract_data_from_body()
+        user, password, db_name, *_ = extract_data_from_body()
 
         if db_name is None:
-            return 'db_name parameter is mandatory', 400
+            return "'db_name' parameter is mandatory", 400
 
         create_database(user, password, db_name)
 
-        return f'{db_name} was created successfully'
+        return f"'{db_name}' was created successfully"
 
     except psycopg2.errors.SyntaxError as e:
         return f'There was an issue with the provided parameters:\n{e}', 400
 
     except psycopg2.errors.DuplicateDatabase:
-        return f'{db_name} is already created', 400
+        return f"'{db_name}' is already created", 400
 
 
 def drop_database_api(db_name: str):
@@ -44,14 +44,14 @@ def drop_database_api(db_name: str):
 
     """
     try:
-        user, password, *_ = _extract_data_from_body()
+        user, password, *_ = extract_data_from_body()
 
         drop_database(user, password, db_name)
 
-        return f'{db_name} was dropped successfully'
+        return f"'{db_name}' was dropped successfully"
 
     except psycopg2.errors.InvalidCatalogName:
-        return f'{db_name} is not an existing database', 400
+        return f"'{db_name}' is not an existing database", 400
 
 
 def create_table_api(db_name: str):
@@ -69,17 +69,17 @@ def create_table_api(db_name: str):
 
     """
     try:
-        user, password, _, table_name, columns, primary_keys, forign_keys = _extract_data_from_body()
+        user, password, _, table_name, columns, primary_keys, forign_keys = extract_data_from_body()
 
         create_table(user, password, db_name, table_name, columns, primary_keys, forign_keys)
 
-        return f'{table_name} was created successfully in {db_name} database'
+        return f"'{table_name}' was created successfully in '{db_name}' database"
 
     except psycopg2.errors.SyntaxError as e:
         return f'There was an issue with the provided parameters:\n{e}', 400
 
     except psycopg2.errors.DuplicateTable:
-        return f'{table_name} is already exist in {db_name} database', 400
+        return f"'{table_name}' is already exist in '{db_name}' database", 400
 
 
 def drop_table_api(db_name: str, table_name: str):
@@ -92,14 +92,14 @@ def drop_table_api(db_name: str, table_name: str):
     }
 
     """
-    user, password, *_ = _extract_data_from_body()
+    user, password, *_ = extract_data_from_body()
 
     drop_table(user, password, db_name, table_name)
 
-    return f'{table_name} was dropped successfully from {db_name} database'
+    return f"'{table_name}' was dropped successfully from '{db_name}' database"
 
 
-def _extract_data_from_body(
+def extract_data_from_body(
     default_user=constants.DEFAULT_USER,
     default_password=constants.DEFAULT_PASSWORD,
     default_db_name=None,

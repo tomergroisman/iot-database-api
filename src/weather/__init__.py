@@ -1,37 +1,48 @@
+import psycopg2
 from flask import Blueprint
 
-from services.api import create_database, drop_database
+from services.api import extract_data_from_body
+from services.postgres import create_database, create_table
+from services.constants import (
+    DEFAULT_WEATHER_DB_NAME as db_name,
+    DEFAULT_WEATHER_TABLE_NAME as table_name
+)
 
 weather = Blueprint('weather', __name__)
 
 
-@weather.route('/database', methods=['POST'])
+@weather.route('/', methods=['POST'])
 def create_weather_database():
     """
-    POST /weather/database
-    Create a new weather database
+    POST /weather/create
+    Create a new weather database and table
+
+    - *body (req)*: {
+        table_name (string): the new table name
+        columns: A list of column dictionaties: {name (string), data_type (string), length (number), constrains (list)}
+        primary_keys: A list of primary keys (string)
+        forign_keys: A list of forgin keys dictionaties: {name (string), reference (string)}
+        user? (string): db user name, default is 'admin'
+        password? (string): db user password, default is 'admin'
+    }
 
     """
-    return create_database('weather')
+    try:
+        user, password, *_, columns, primary_keys, forign_keys = extract_data_from_body()
+
+        create_database(user, password, db_name)
+        create_table(user, password, db_name, table_name, columns, primary_keys, forign_keys)
+        return f"'{db_name}' database and '{table_name}' table were created successfully"
+
+    except psycopg2.errors.DuplicateDatabase:
+        return f"'{db_name}' is already created", 400
 
 
-@weather.route('/database', methods=['DELETE'])
-def drop_weather_database():
+@weather.route('/add', methods=['POST'])
+def add_weather_instance():
     """
-    DELETE /weather/database
-    Drop an existing weather database
-
-    """
-    return drop_database('weather')
-
-
-@weather.route('/database/<db_name>/table', methods=['DELETE'])
-def create_weather_table():
-    """
-    DELETE /weather/database
-    Drop an existing weather database
+    POST /weather/add
+    Create a new weather instance
 
     """
-    return drop_database('weather')
-
-
+    pass
