@@ -1,11 +1,13 @@
 import psycopg2
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
 
 from services.api import extract_data_from_body
-from services.postgres import create_database, create_table
-from services.constants import (
-    DEFAULT_WEATHER_DB_NAME as db_name,
-    DEFAULT_WEATHER_TABLE_NAME as table_name
+from services.postgres import create_database, create_table, get_instances, insert_instance
+
+from .constants import (
+    WEATHER_DB_NAME as db_name,
+    WEATHER_TABLE_NAME as table_name,
+    WEATHER_TABLE_STRUCTURE as table_structure
 )
 
 weather = Blueprint('weather', __name__)
@@ -18,31 +20,61 @@ def create_weather_database():
     Create a new weather database and table
 
     - *body (req)*: {
-        table_name (string): the new table name
-        columns (list[Column]): A list of column dictionaties
-        primary_keys (list[string]): A list of primary keys
-        forign_keys (list[ForignKey]): A list of forgin keys dictionaties
         user? (string): db user name, default is 'admin'
         password? (string): db user password, default is 'admin'
     }
 
     """
     try:
-        user, password, *_, columns, primary_keys, forign_keys = extract_data_from_body()
+        user, password, *_ = extract_data_from_body()
+        columns = table_structure.get('columns')
 
         create_database(user, password, db_name)
-        create_table(user, password, db_name, table_name, columns, primary_keys, forign_keys)
+        create_table(user, password, db_name, table_name, columns)
         return f"'{db_name}' database and '{table_name}' table were created successfully"
 
     except psycopg2.errors.DuplicateDatabase:
-        return f"'{db_name}' is already created", 400
+        try:
+            create_table(user, password, db_name, table_name, columns)
+            return f"'{table_name}' table was created successfully"
+        except psycopg2.errors.DuplicateTable:
+            return f"'{table_name}' is already exist in '{db_name}' database", 400
 
 
-@weather.route('/add', methods=['POST'])
-def add_weather_instance():
+@weather.route('/', methods=['GET'])
+def get_weather_instances():
     """
     POST /weather/add
     Create a new weather instance
 
+    - *query* (req): {
+        filter (string): PostgreSQL filter query
+    }
+
     """
-    pass
+    user, password, *_ = extract_data_from_body()
+    filter_query = request.args.get('filter', '*')
+
+    results = get_instances(user, password, db_name, table_name, filter_query)
+    return jsonify(results)
+
+
+@weather.route('/insert', methods=['POST'])
+def insert_weather_instance():
+    """
+    POST /weather/add
+    Create a new weather instance
+
+    - *body* (req): {
+        instance (Instance): The instance to insert
+    }
+
+    """
+    try:
+        user, password, *_, instance = extract_data_from_body()
+
+        insert_instance(user, password, db_name, table_name, instance)
+        return f"{instance['values']} were added to '{table_name}' table successfully"
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400

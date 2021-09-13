@@ -26,11 +26,11 @@ def create_database_api():
 
         return f"'{db_name}' was created successfully"
 
-    except psycopg2.errors.SyntaxError as e:
-        return f'There was an issue with the provided parameters:\n{e}', 400
-
     except psycopg2.errors.DuplicateDatabase:
         return f"'{db_name}' is already created", 400
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400
 
 
 def drop_database_api(db_name: str):
@@ -71,17 +71,17 @@ def create_table_api(db_name: str):
 
     """
     try:
-        user, password, _, table_name, columns, primary_keys, forign_keys = extract_data_from_body()
+        user, password, _, table_name, columns, primary_keys, forign_keys, *_ = extract_data_from_body()
 
         create_table(user, password, db_name, table_name, columns, primary_keys, forign_keys)
 
         return f"'{table_name}' was created successfully in '{db_name}' database"
 
-    except psycopg2.errors.SyntaxError as e:
-        return f'There was an issue with the provided parameters:\n{e}', 400
-
     except psycopg2.errors.DuplicateTable:
         return f"'{table_name}' is already exist in '{db_name}' database", 400
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400
 
 
 def drop_table_api(db_name: str, table_name: str):
@@ -110,8 +110,8 @@ def extract_data_from_body(
     default_table_name=None,
     default_columns=None,
     default_primary_keys=None,
-    default_forign_keys=None
-
+    default_forign_keys=None,
+    default_instance=None
 ):
     body = request.get_json() or {}
 
@@ -122,5 +122,6 @@ def extract_data_from_body(
     columns = body.get('columns', default_columns)
     primary_keys = body.get('primary_keys', default_primary_keys)
     forign_keys = body.get('forign_keys', default_forign_keys)
+    instance = body.get('instance', default_instance)
 
-    return user, password, db_name, table_name, columns, primary_keys, forign_keys
+    return user, password, db_name, table_name, columns, primary_keys, forign_keys, instance

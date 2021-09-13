@@ -1,5 +1,2 @@
 DEFAULT_USER = 'admin'
 DEFAULT_PASSWORD = 'admin'
-
-DEFAULT_WEATHER_DB_NAME = 'weather'
-DEFAULT_WEATHER_TABLE_NAME = 'measurements'
