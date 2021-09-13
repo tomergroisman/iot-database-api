@@ -1,9 +1,13 @@
-from typing import Any
 from postgresql_python.postgresql import PostgreSQL
 from postgresql_python.types import Column, ForignKey, Instance
 
+from services.constants import (
+    DEFAULT_USER as user,
+    DEFAULT_PASSWORD as password
+)
 
-def create_database(user: str, password: str, db_name: str):
+
+def create_database(db_name: str):
     """
     Create a new database
 
@@ -17,7 +21,7 @@ def create_database(user: str, password: str, db_name: str):
     postgres.disconnect()
 
 
-def drop_database(user: str, password: str, db_name: str):
+def drop_database(db_name: str):
     """
     Create a new database
 
@@ -32,13 +36,11 @@ def drop_database(user: str, password: str, db_name: str):
 
 
 def create_table(
-    user: str,
-    password: str,
     db_name: str,
     table_name: str,
     columns: list[Column],
-    primary_keys: list[str] = None,
-    forign_keys: list[ForignKey] = None
+    primary_keys: list[str],
+    forign_keys: list[ForignKey]
 ):
     """
     Create a new table in a database
@@ -63,8 +65,6 @@ def create_table(
 
 
 def drop_table(
-    user: str,
-    password: str,
     db_name: str,
     table_name: str,
 ):
@@ -83,8 +83,6 @@ def drop_table(
 
 
 def insert_instance(
-    user: str,
-    password: str,
     db_name: str,
     table_name: str,
     instance: Instance
@@ -105,8 +103,6 @@ def insert_instance(
 
 
 def get_instances(
-    user: str,
-    password: str,
     db_name: str,
     table_name: str,
     columns: str,
