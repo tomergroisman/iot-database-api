@@ -109,6 +109,7 @@ def get_instances(
     password: str,
     db_name: str,
     table_name: str,
+    columns: str,
     filter_query: str
 ):
     """
@@ -121,7 +122,10 @@ def get_instances(
     - *filter_query*: A PostgreSQL filter query
 
     """
+    kwargs = dict(columns=columns, filter=filter_query)
+    kwargs = {k: v for k, v in kwargs.items() if v is not None}
+
     postgres = PostgreSQL(user=user, password=password, db_name=db_name)
-    results = postgres.get(table_name, filter_query)
+    results = postgres.get(table_name, **kwargs)
     postgres.disconnect()
     return results

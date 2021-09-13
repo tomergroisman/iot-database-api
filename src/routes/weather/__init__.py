@@ -53,9 +53,10 @@ def get_weather_instances():
 
     """
     user, password, *_ = extract_data_from_body()
-    filter_query = request.args.get('filter', '*')
+    columns = request.args.get('columns')
+    filter_query = request.args.get('filter')
 
-    results = get_instances(user, password, db_name, table_name, filter_query)
+    results = get_instances(user, password, db_name, table_name, columns, filter_query)
     return jsonify(results)
 
 
