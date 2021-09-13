@@ -1,2 +1,2 @@
-DEFAULT_USER = 'admin'
-DEFAULT_PASSWORD = 'admin'
+DEFAULT_USER: str = 'admin'
+DEFAULT_PASSWORD: str = 'admin'

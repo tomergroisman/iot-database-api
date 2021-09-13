@@ -1,13 +1,41 @@
 import psycopg2
-from flask import request
+from flask import request, jsonify
 
 import services.constants as constants
-from services.postgres import create_database, create_table, drop_database, drop_table
+from services.postgres import create_database, create_table, drop_database, drop_table, get_instances, insert_instance
 
 
 def create_database_api():
     """
     Create a new database
+
+    - *body (req)*: {
+        db_name (string): The new database name
+        user? (string): db user name, default is 'admin'
+        password? (string): db user password, default is 'admin'
+    }
+
+    """
+    try:
+        user, password, db_name, *_ = extract_data_from_body()
+
+        if db_name is None:
+            return "'db_name' parameter is mandatory", 400
+
+        create_database(user, password, db_name)
+
+        return f"'{db_name}' was created successfully"
+
+    except psycopg2.errors.DuplicateDatabase:
+        return f"'{db_name}' is already created", 400
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400
+
+
+def init_database_api():
+    """
+    Create a new database and table
 
     - *body (req)*: {
         db_name (string): The new database name
@@ -101,6 +129,55 @@ def drop_table_api(db_name: str, table_name: str):
     drop_table(user, password, db_name, table_name)
 
     return f"'{table_name}' was dropped successfully from '{db_name}' database"
+
+
+def insert_instance_api(db_name: str, table_name: str):
+    """
+    Create a new table in a database
+
+    - *db_name* (string): The db name
+    - *table_name* (string): The table name to drop
+    - *body (req)*: {
+        instance (Instance): The new instance to insert
+        user? (string): db user name, default is 'admin'
+        password? (string): db user password, default is 'admin'
+    }
+
+    """
+    try:
+        user, password, *_, instance = extract_data_from_body()
+
+        insert_instance(user, password, db_name, table_name, instance)
+
+        return f"{instance['values']} were added to '{table_name}' table successfully"
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400
+
+
+def get_instances_api(db_name: str, table_name: str):
+    """
+    Get instances from a table in a database
+
+    - *db_name* (string): The db name
+    - *table_name* (string): The table name to drop
+    - *query* (req): {
+        columns (string): The columns to filter
+        filter (string): PostgreSQL filter query
+    }
+
+    """
+    try:
+        user, password, *_ = extract_data_from_body()
+
+        columns = request.args.get('columns')
+        filter_query = request.args.get('filter')
+
+        results = get_instances(user, password, db_name, table_name, columns, filter_query)
+        return jsonify(results)
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400
 
 
 def extract_data_from_body(

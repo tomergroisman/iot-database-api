@@ -1,7 +1,7 @@
 import psycopg2
 from flask import Blueprint, request, jsonify
 
-from services.api import extract_data_from_body
+from services.api import extract_data_from_body, get_instances_api
 from services.postgres import create_database, create_table, get_instances, insert_instance
 
 from .constants import (
@@ -44,20 +44,16 @@ def create_weather_database():
 @weather.route('/', methods=['GET'])
 def get_weather_instances():
     """
-    POST /weather/add
-    Create a new weather instance
+    GET /weather/add
+    Get instances from measurements table in the weather database
 
     - *query* (req): {
+        columns (string): The columns to filter
         filter (string): PostgreSQL filter query
     }
 
     """
-    user, password, *_ = extract_data_from_body()
-    columns = request.args.get('columns')
-    filter_query = request.args.get('filter')
-
-    results = get_instances(user, password, db_name, table_name, columns, filter_query)
-    return jsonify(results)
+    return get_instances_api(db_name, table_name)
 
 
 @weather.route('/insert', methods=['POST'])
