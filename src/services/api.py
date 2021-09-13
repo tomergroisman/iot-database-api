@@ -10,7 +10,7 @@ def create_database_api():
     Create a new database
 
     - *body (req)*: {
-        db_name? (string): The new database name default is default_db_name param
+        db_name (string): The new database name
         user? (string): db user name, default is 'admin'
         password? (string): db user password, default is 'admin'
     }
@@ -37,6 +37,7 @@ def drop_database_api(db_name: str):
     """
     Drop an existing database
 
+    - *db_name* (string): The db name to drop
     - *body (req)*: {
         user? (string): db user name, default is 'admin'
         password? (string): db user password, default is 'admin'
@@ -58,11 +59,12 @@ def create_table_api(db_name: str):
     """
     Create a new table in a database
 
+    - *db_name* (string): The db name to create the table
     - *body (req)*: {
         table_name (string): the new table name
-        columns: A list of column dictionaties: {name (string), data_type (string), length (number), constrains (list)}
-        primary_keys: A list of primary keys (string)
-        forign_keys: A list of forgin keys dictionaties: {name (string), reference (string)}
+        columns (list[Column]): A list of column dictionaties
+        primary_keys (list[string]): A list of primary keys
+        forign_keys (list(ForignKey)): A list of forgin keys dictionaties
         user? (string): db user name, default is 'admin'
         password? (string): db user password, default is 'admin'
     }
@@ -86,6 +88,8 @@ def drop_table_api(db_name: str, table_name: str):
     """
     Create a new table in a database
 
+    - *db_name* (string): The db name
+    - *table_name* (string): The table name to drop
     - *body (req)*: {
         user? (string): db user name, default is 'admin'
         password? (string): db user password, default is 'admin'

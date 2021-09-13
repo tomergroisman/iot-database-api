@@ -1,7 +1,7 @@
 from flask import Flask
 
-from database import database
-from weather import weather
+from routes.database import database
+from routes.weather import weather
 
 # Create Flask instance
 app = Flask(__name__)

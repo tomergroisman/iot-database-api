@@ -19,9 +19,9 @@ def create_weather_database():
 
     - *body (req)*: {
         table_name (string): the new table name
-        columns: A list of column dictionaties: {name (string), data_type (string), length (number), constrains (list)}
-        primary_keys: A list of primary keys (string)
-        forign_keys: A list of forgin keys dictionaties: {name (string), reference (string)}
+        columns (list[Column]): A list of column dictionaties
+        primary_keys (list[string]): A list of primary keys
+        forign_keys (list[ForignKey]): A list of forgin keys dictionaties
         user? (string): db user name, default is 'admin'
         password? (string): db user password, default is 'admin'
     }
