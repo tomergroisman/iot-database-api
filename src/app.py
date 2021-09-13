@@ -1,19 +1,16 @@
 from flask import Flask
 
+from routes.utils import utils
 from routes.database import database
 from routes.weather import weather
 
 # Create Flask instance
 app = Flask(__name__)
 
+# utils routes
+app.register_blueprint(utils, url_prefix='/utils')
 
-# Check connection route
-@app.route('/health-check', methods=['GET'])
-def health_check():
-    return "Healthy"
-
-
-# weather routes
+# database routes
 app.register_blueprint(database, url_prefix='/database')
 
 # weather routes

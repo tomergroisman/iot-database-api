@@ -1,10 +1,7 @@
 from postgresql_python.postgresql import PostgreSQL
 from postgresql_python.types import Column, ForignKey, Instance
 
-from services.constants import (
-    DEFAULT_USER as user,
-    DEFAULT_PASSWORD as password
-)
+from services.auth import get_credentials
 
 
 def create_database(db_name: str):
@@ -14,7 +11,8 @@ def create_database(db_name: str):
     - *db_name*: Database name to create
 
     """
-    postgres = PostgreSQL(user=user, password=password)
+    credentials = get_credentials()
+    postgres = PostgreSQL(**credentials)
     postgres.create_database(db_name)
     postgres.disconnect()
 
@@ -26,7 +24,8 @@ def drop_database(db_name: str):
     - *db_name*: Database name to create
 
     """
-    postgres = PostgreSQL(user=user, password=password)
+    credentials = get_credentials()
+    postgres = PostgreSQL(**credentials)
     postgres.drop_database(db_name)
     postgres.disconnect()
 
@@ -48,7 +47,8 @@ def create_table(
     - *forign_keys*: A list of forgin keys dictionaties
 
     """
-    postgres = PostgreSQL(user=user, password=password, db_name=db_name)
+    credentials = get_credentials()
+    postgres = PostgreSQL(**credentials, db_name=db_name)
     postgres.create_table(
         table_name=table_name,
         columns=columns,
@@ -69,7 +69,8 @@ def drop_table(
     - *table_name*: The new table name
 
     """
-    postgres = PostgreSQL(user=user, password=password, db_name=db_name)
+    credentials = get_credentials()
+    postgres = PostgreSQL(**credentials, db_name=db_name)
     postgres.drop_table(table_name=table_name)
     postgres.disconnect()
 
@@ -87,7 +88,8 @@ def insert_instance(
     - *instance*: The new instance data
 
     """
-    postgres = PostgreSQL(user=user, password=password, db_name=db_name)
+    credentials = get_credentials()
+    postgres = PostgreSQL(**credentials, db_name=db_name)
     postgres.insert(table_name, instance)
     postgres.disconnect()
 
@@ -106,10 +108,11 @@ def get_instances(
     - *filter_query*: A PostgreSQL filter query
 
     """
+    credentials = get_credentials()
     kwargs = dict(columns=columns, filter=filter_query)
     kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-    postgres = PostgreSQL(user=user, password=password, db_name=db_name)
+    postgres = PostgreSQL(**credentials, db_name=db_name)
     results = postgres.get(table_name, **kwargs)
     postgres.disconnect()
     return results
