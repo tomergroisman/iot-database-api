@@ -11,8 +11,6 @@ def create_database(db_name: str):
     """
     Create a new database
 
-    - *user*: PostgreSQL user name
-    - *password*: User's password
     - *db_name*: Database name to create
 
     """
@@ -25,8 +23,6 @@ def drop_database(db_name: str):
     """
     Create a new database
 
-    - *user*: PostgreSQL user name
-    - *password*: User's password
     - *db_name*: Database name to create
 
     """
@@ -45,8 +41,6 @@ def create_table(
     """
     Create a new table in a database
 
-    - *user*: PostgreSQL user name
-    - *password*: User's password
     - *db_name*: The database name
     - *table_name*: The new table name
     - *columns*: A list of column dictionaties
@@ -71,8 +65,6 @@ def drop_table(
     """
     Create a new table in a database
 
-    - *user*: PostgreSQL user name
-    - *password*: User's password
     - *db_name*: The database name
     - *table_name*: The new table name
 
@@ -90,8 +82,6 @@ def insert_instance(
     """
     Create a new instance in a database table
 
-    - *user*: PostgreSQL user name
-    - *password*: User's password
     - *db_name*: The database name
     - *table_name*: The table name
     - *instance*: The new instance data
@@ -111,8 +101,6 @@ def get_instances(
     """
     Create a new instance in a database table
 
-    - *user*: PostgreSQL user name
-    - *password*: User's password
     - *db_name*: The database name
     - *table_name*: The table name
     - *filter_query*: A PostgreSQL filter query

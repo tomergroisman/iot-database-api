@@ -55,7 +55,7 @@ def create_new_table(db_name: str):
     }
 
     """
-    table_name, columns, primary_keys, forign_keys, *_ = extract_data_from_body()
+    _, table_name, columns, primary_keys, forign_keys, *_ = extract_data_from_body()
     return create_table_api(db_name, table_name, columns, primary_keys, forign_keys)
 
 

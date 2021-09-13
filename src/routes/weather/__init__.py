@@ -1,6 +1,7 @@
 from flask import Blueprint
 
-from services.api import extract_data_from_body, get_instances_api, init_database_api, insert_instance_api
+from services.api import get_instances_api, init_database_api, insert_instance_api
+from services.extarctors import extract_data_from_body
 
 from .constants import (
     WEATHER_DB_NAME as db_name,
