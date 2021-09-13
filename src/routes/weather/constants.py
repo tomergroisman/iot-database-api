@@ -13,7 +13,7 @@ WEATHER_TABLE_STRUCTURE: list[Column] = {
             ]
         },
         {
-            'name': 'date',
+            'name': 'timestamp',
             'data_type': 'TIMESTAMP',
             'constrains': [
                 'NOT NULL'
