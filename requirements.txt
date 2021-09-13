@@ -1,3 +1,4 @@
+psycopg2
 flask
 flake8
 git+https://github.com/tomergroisman/postgresql-python.git
