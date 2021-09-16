@@ -26,6 +26,10 @@ WEATHER_TABLE_STRUCTURE: list[Column] = {
         {
             'name': 'humidity',
             'data_type': 'FLOAT'
+        },
+        {
+            'name': 'heat_index',
+            'data_type': 'FLOAT'
         }
     ]
 }
