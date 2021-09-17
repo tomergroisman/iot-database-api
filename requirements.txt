@@ -1,4 +1,7 @@
 psycopg2
 flask
 flake8
+matplotlib
+numpy
+requests
 git+https://github.com/tomergroisman/postgresql-python.git
