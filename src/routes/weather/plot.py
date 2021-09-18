@@ -46,10 +46,16 @@ def get_weather_measurements_plot():
         None: get_instances(db_name, table_name, None, None)
     }
 
-    measurements = measurements_scope.get(
-        scope,
-        get_instances(db_name, table_name, None, f"timestamp >= '{scope}' AND timestamp < '{tommororow(scope)}'")
-    )
+    print(measurements_scope[scope])
+
+    measurements = measurements_scope.get(scope)
+    if measurements is None:
+        measurements = get_instances(
+            db_name,
+            table_name,
+            None,
+            f"timestamp >= '{scope}' AND timestamp < '{tommororow(scope)}'"
+        )
 
     for measurement in measurements:
         time = timestamp_to_dec(measurement["timestamp"])
