@@ -1,5 +1,7 @@
 import io
+import datetime as dt
 from datetime import datetime
+from flask import request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -16,6 +18,18 @@ def timestamp_to_dec(timestamp: datetime):
     return time
 
 
+def today():
+    return dt.date.today()
+
+
+def tommororow(date: datetime = None):
+    if date is None:
+        return today() + dt.timedelta(1)
+    yyyy, mm, dd = date.split('-')
+    date = dt.datetime(int(yyyy), int(mm), int(dd))
+    return date + dt.timedelta(1)
+
+
 def get_weather_measurements_plot():
     measurements_dict = {
         "times": [],
@@ -24,7 +38,18 @@ def get_weather_measurements_plot():
         "heat_indexes": []
     }
 
-    measurements = get_instances(db_name, table_name, None, None)
+    scope = request.args.get('scope')
+    plot = request.args.get('plot', 'scatter')
+
+    measurements_scope = {
+        'today': get_instances(db_name, table_name, None, f"timestamp >= '{today()}' AND timestamp < '{tommororow()}'"),
+        None: get_instances(db_name, table_name, None, None)
+    }
+
+    measurements = measurements_scope.get(
+        scope,
+        get_instances(db_name, table_name, None, f"timestamp >= '{scope}' AND timestamp < '{tommororow(scope)}'")
+    )
 
     for measurement in measurements:
         time = timestamp_to_dec(measurement["timestamp"])
@@ -39,10 +64,16 @@ def get_weather_measurements_plot():
 
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
-    axis.scatter(measurements_dict["times"], measurements_dict["temperatures"], s=5)
-    axis.scatter(measurements_dict["times"], measurements_dict["humidities"], s=5)
-    axis.scatter(measurements_dict["times"], measurements_dict["heat_indexes"], s=5)
+    if plot == 'line':
+        axis.plot(measurements_dict["times"], measurements_dict["temperatures"], label='Temperature')
+        axis.plot(measurements_dict["times"], measurements_dict["humidities"], label='Humidity')
+        axis.plot(measurements_dict["times"], measurements_dict["heat_indexes"], label='Heat Index')
+    if plot == 'scatter':
+        axis.scatter(measurements_dict["times"], measurements_dict["temperatures"], s=5, label='Temperature')
+        axis.scatter(measurements_dict["times"], measurements_dict["humidities"], s=5, label='Humidity')
+        axis.scatter(measurements_dict["times"], measurements_dict["heat_indexes"], s=5, label='Heat Index')
 
+    axis.legend()
     axis.set_xlim([0, 24])
     axis.set_ylim([0, 100])
 
