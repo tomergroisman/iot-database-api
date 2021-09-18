@@ -46,8 +46,6 @@ def get_weather_measurements_plot():
         None: get_instances(db_name, table_name, None, None)
     }
 
-    print(measurements_scope[scope])
-
     measurements = measurements_scope.get(scope)
     if measurements is None:
         measurements = get_instances(
