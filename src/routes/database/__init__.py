@@ -49,9 +49,9 @@ def create_new_table(db_name: str):
     - *db_name* (string): The db name to create the table
     - *body (req)*: {
         table_name (string): the new table name
-        columns (list[Column]): A list of column dictionaties
-        primary_keys (list[string]): A list of primary keys
-        forign_keys (list(ForignKey)): A list of forgin keys dictionaties
+        columns (List[Column]): A list of column dictionaties
+        primary_keys (List[string]): A list of primary keys
+        forign_keys (List(ForignKey)): A list of forgin keys dictionaties
     }
 
     """
@@ -80,9 +80,9 @@ def init_new_database():
     - *body (req)*: {
         db_name (string): The new database name
         table_name (string): the new table name
-        columns (list[Column]): A list of column dictionaties
-        primary_keys (list[string]): A list of primary keys (optional)
-        forign_keys (list(ForignKey)): A list of forgin keys dictionaties (optional)
+        columns (List[Column]): A list of column dictionaties
+        primary_keys (List[string]): A list of primary keys (optional)
+        forign_keys (List(ForignKey)): A list of forgin keys dictionaties (optional)
     }
 
     """

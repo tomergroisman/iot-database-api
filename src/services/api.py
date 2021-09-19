@@ -1,5 +1,6 @@
 import psycopg2
 from flask import request, jsonify
+from typing import List
 from postgresql_python.types import Column, ForignKey, Instance
 
 from services.postgres import (
@@ -53,18 +54,18 @@ def drop_database_api(db_name: str):
 def create_table_api(
     db_name: str,
     table_name: str,
-    columns: list[Column],
-    primary_keys: list[str] = None,
-    forign_keys: list[ForignKey] = None
+    columns: List[Column],
+    primary_keys: List[str] = None,
+    forign_keys: List[ForignKey] = None
 ):
     """
     Create a new table in a database and return a response
 
     - *db_name* (string): The new database name
     - *table_name* (string): The new table name
-    - *columns* (list[Column]): A list of column dictionaties
-    - *primary_keys* (list[string]): A list of primary keys (optional)
-    - *forign_keys* (list(ForignKey)): A list of forgin keys dictionaties (optional)
+    - *columns* (List[Column]): A list of column dictionaties
+    - *primary_keys* (List[string]): A list of primary keys (optional)
+    - *forign_keys* (List(ForignKey)): A list of forgin keys dictionaties (optional)
 
     """
     try:
@@ -100,18 +101,18 @@ def drop_table_api(db_name: str, table_name: str):
 def init_database_api(
     db_name: str,
     table_name: str,
-    columns: list[Column],
-    primary_keys: list[str] = None,
-    forign_keys: list[ForignKey] = None
+    columns: List[Column],
+    primary_keys: List[str] = None,
+    forign_keys: List[ForignKey] = None
 ):
     """
     Create a new database and table
 
     - *db_name* (string): The new database name
     - *table_name* (string): The new table name
-    - *columns* (list[Column]): A list of column dictionaties
-    - *primary_keys* (list[string]): A list of primary keys (optional)
-    - *forign_keys* (list(ForignKey)): A list of forgin keys dictionaties (optional)
+    - *columns* (List[Column]): A list of column dictionaties
+    - *primary_keys* (List[string]): A list of primary keys (optional)
+    - *forign_keys* (List(ForignKey)): A list of forgin keys dictionaties (optional)
 
     """
     try:

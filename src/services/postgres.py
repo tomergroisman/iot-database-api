@@ -1,3 +1,4 @@
+from typing import List
 from postgresql_python.postgresql import PostgreSQL
 from postgresql_python.types import Column, ForignKey, Instance
 
@@ -33,9 +34,9 @@ def drop_database(db_name: str):
 def create_table(
     db_name: str,
     table_name: str,
-    columns: list[Column],
-    primary_keys: list[str],
-    forign_keys: list[ForignKey]
+    columns: List[Column],
+    primary_keys: List[str],
+    forign_keys: List[ForignKey]
 ):
     """
     Create a new table in a database

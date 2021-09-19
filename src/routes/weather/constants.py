@@ -1,8 +1,9 @@
+from typing import List
 from postgresql_python.types import Column
 
 WEATHER_DB_NAME = 'weather'
 WEATHER_TABLE_NAME = 'measurements'
-WEATHER_TABLE_STRUCTURE: list[Column] = {
+WEATHER_TABLE_STRUCTURE: List[Column] = {
     'columns': [
         {
             'name': 'id',
