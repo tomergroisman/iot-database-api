@@ -4,4 +4,5 @@ flake8
 matplotlib
 numpy
 requests
+gunicorn
 git+https://github.com/tomergroisman/postgresql-python.git
