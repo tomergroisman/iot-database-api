@@ -18,6 +18,10 @@ def timestamp_to_dec(timestamp: datetime):
     return time
 
 
+def date(timetamp: str):
+    return datetime.strptime(timetamp, '%d-%m-%Y')
+
+
 def today():
     return dt.date.today()
 
@@ -25,8 +29,6 @@ def today():
 def tommororow(date: datetime = None):
     if date is None:
         return today() + dt.timedelta(1)
-    yyyy, mm, dd = date.split('-')
-    date = dt.datetime(int(yyyy), int(mm), int(dd))
     return date + dt.timedelta(1)
 
 
@@ -39,21 +41,37 @@ def get_weather_measurements_plot():
     }
 
     scope = request.args.get('scope')
+    start = request.args.get('start')
+    end = request.args.get('end')
     plot = request.args.get('plot', 'scatter')
 
     measurements_scope = {
         'today': get_instances(db_name, table_name, None, f"timestamp >= '{today()}' AND timestamp < '{tommororow()}'"),
-        None: get_instances(db_name, table_name, None, None)
     }
 
-    measurements = measurements_scope.get(scope)
+    measurements = None
+
+    if start is not None:
+        if end is not None:
+            measurements = get_instances(
+                db_name,
+                table_name,
+                None,
+                f"timestamp >= '{date(start)}' AND timestamp < '{date(end)}'"
+            )
+        else:
+            measurements = get_instances(
+                db_name,
+                table_name,
+                None,
+                f"timestamp >= '{date(start)}' AND timestamp < '{tommororow(date(start))}'"
+            )
+
+    if scope is not None:
+        measurements = measurements_scope.get(scope)
+
     if measurements is None:
-        measurements = get_instances(
-            db_name,
-            table_name,
-            None,
-            f"timestamp >= '{scope}' AND timestamp < '{tommororow(scope)}'"
-        )
+        measurements = get_instances(db_name, table_name, None, None)
 
     for measurement in measurements:
         time = timestamp_to_dec(measurement["timestamp"])
