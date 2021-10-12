@@ -1,5 +1,6 @@
-from flask import Blueprint, Response
+from flask import Blueprint, Response, request
 from routes.weather.plot import get_weather_measurements_plot
+from routes.weather.utils import get_interval_query
 
 from services.api import get_instances_api, init_database_api, insert_instance_api
 from services.extarctors import extract_data_from_body
@@ -48,17 +49,22 @@ def get_weather_instances():
     - *query* (req): {
         columns (string): The columns to filter
         filter (string): PostgreSQL filter query
+        start (string): Start date (dd-mm-yyy form)
+        end (string): End date (dd-mm-yyy form)
     }
 
     """
-    return get_instances_api(db_name, table_name)
+    start = request.args.get('start')
+    end = request.args.get('end')
+    additional_query = get_interval_query(start, end)
+    return get_instances_api(db_name, table_name, additional_query)
 
 
 @weather.route('/plot', methods=['GET'])
 def get_plot():
     """
     GET /weather/plot
-    Get instances from measurements table in the weather database
+    Plot instances from measurements table in the weather database
 
     - *query* (req): {
         columns (string): The columns to filter

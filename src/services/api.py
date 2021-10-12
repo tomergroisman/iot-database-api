@@ -153,17 +153,25 @@ def insert_instance_api(
 def get_instances_api(
     db_name: str,
     table_name: str,
+    additional_filters: str,
 ):
     """
     Get instances from a table in a database and return it a response
 
     - *db_name* (string): The new database name
     - *table_name* (string): the new table name
+    - *additional_filters* (string): Additional filter query
 
     """
     try:
         columns = request.args.get('columns')
         filter_query = request.args.get('filter')
+
+        if additional_filters is not None:
+            if filter_query is not None:
+                filter_query += f" AND {additional_filters}"
+            else:
+                filter_query = additional_filters
 
         results = get_instances(db_name, table_name, columns, filter_query)
         return jsonify(results)

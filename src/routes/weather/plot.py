@@ -1,35 +1,15 @@
 import io
-import datetime as dt
-from datetime import datetime
 from flask import request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+from routes.weather.utils import get_interval_query
 
 from services.postgres import get_instances
+from services.time import today, tommororow, timestamp_to_dec
 from .constants import (
     WEATHER_DB_NAME as db_name,
     WEATHER_TABLE_NAME as table_name,
 )
-
-
-def timestamp_to_dec(timestamp: datetime):
-    hour, minute, second = timestamp.strftime("%H:%M:%S").split(":")
-    time = int(hour) + int(minute) / 60 + int(second) / 6000
-    return time
-
-
-def date(timetamp: str):
-    return datetime.strptime(timetamp, '%d-%m-%Y')
-
-
-def today():
-    return dt.date.today()
-
-
-def tommororow(date: datetime = None):
-    if date is None:
-        return today() + dt.timedelta(1)
-    return date + dt.timedelta(1)
 
 
 def get_weather_measurements_plot():
@@ -46,29 +26,25 @@ def get_weather_measurements_plot():
     plot = request.args.get('plot', 'scatter')
 
     measurements_scope = {
-        'today': get_instances(db_name, table_name, None, f"timestamp >= '{today()}' AND timestamp < '{tommororow()}'"),
+        'today': {
+            "db_name": db_name,
+            "table_name": table_name,
+            "columns": None,
+            "filter_query": f"timestamp >= '{today()}' AND timestamp < '{tommororow()}'"
+        }
     }
 
     measurements = None
 
-    if start is not None:
-        if end is not None:
-            measurements = get_instances(
-                db_name,
-                table_name,
-                None,
-                f"timestamp >= '{date(start)}' AND timestamp < '{date(end)}'"
-            )
-        else:
-            measurements = get_instances(
-                db_name,
-                table_name,
-                None,
-                f"timestamp >= '{date(start)}' AND timestamp < '{tommororow(date(start))}'"
-            )
-
     if scope is not None:
-        measurements = measurements_scope.get(scope)
+        measurements = get_instances(**measurements_scope.get(scope))
+    else:
+        measurements = get_instances(
+            db_name,
+            table_name,
+            None,
+            get_interval_query(start, end)
+        )
 
     if measurements is None:
         measurements = get_instances(db_name, table_name, None, None)
