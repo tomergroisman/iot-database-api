@@ -22,7 +22,6 @@ def get_first_day_of_month_and_next(month: int, year: int):
         next_datetime = get_first_day_of_month(month + 1, year)
     else:
         next_datetime = get_first_day_of_month(1, year + 1)
-    print([month_datetime, next_datetime])
     return [month_datetime, next_datetime]
 
 
