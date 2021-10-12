@@ -69,7 +69,6 @@ def create_table_api(
 
     """
     try:
-        print(columns)
         create_table(db_name, table_name, columns, primary_keys, forign_keys)
 
         return f"'{table_name}' was created successfully in '{db_name}' database"

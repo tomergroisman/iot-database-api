@@ -1,9 +1,11 @@
 from flask import Blueprint, Response, request
-from routes.weather.plot import get_weather_measurements_plot
-from routes.weather.utils import get_interval_query
+from routes.weather.data_manipulation import calculate_average
+from routes.weather.plot import get_manipulated_data_plot, get_weather_measurements_plot
+from routes.weather.utils import get_interval_query, get_month_measurements_query
 
 from services.api import get_instances_api, init_database_api, insert_instance_api
 from services.extarctors import extract_data_from_body
+from services.postgres import get_instances
 
 from .constants import (
     WEATHER_DB_NAME as db_name,
@@ -73,4 +75,25 @@ def get_plot():
 
     """
     plot = get_weather_measurements_plot()
+    return Response(plot, mimetype='image/png')
+
+
+@weather.route('/average', methods=['GET'])
+def get_average():
+    """
+    GET /weather/average
+    Get instances from measurements table in the weather database
+
+    - *query* (req): {
+        month (number): The month to calculate avg
+        year (number): The year to calculate avg
+    }
+
+    """
+    month = int(request.args.get('month'))
+    year = int(request.args.get('year'))
+    filter_query = get_month_measurements_query(month, year)
+    measurements = get_instances(db_name, table_name, '*', filter_query)
+    data = calculate_average(measurements)
+    plot = get_manipulated_data_plot(data)
     return Response(plot, mimetype='image/png')

@@ -79,3 +79,27 @@ def get_weather_measurements_plot():
     FigureCanvas(fig).print_png(output)
 
     return output.getvalue()
+
+
+def get_manipulated_data_plot(data, plot='line'):
+    times = [i / 2 for i in range(48)]
+
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    if plot == 'line':
+        axis.plot(times, data["temperatures"], label='Temperature')
+        axis.plot(times, data["humidities"], label='Humidity')
+        axis.plot(times, data["heat_indexes"], label='Heat Index')
+    if plot == 'scatter':
+        axis.scatter(times, data["temperatures"], s=5, label='Temperature')
+        axis.scatter(times, data["humidities"], s=5, label='Humidity')
+        axis.scatter(times, data["heat_indexes"], s=5, label='Heat Index')
+
+    axis.legend()
+    axis.set_xlim([0, 24])
+    axis.set_ylim([0, 100])
+
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+
+    return output.getvalue()

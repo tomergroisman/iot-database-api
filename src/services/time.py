@@ -12,6 +12,20 @@ def date(timetamp: str):
     return datetime.strptime(timetamp, '%d-%m-%Y')
 
 
+def get_first_day_of_month(month: int, year: int):
+    return date(f"01-{month}-{year}")
+
+
+def get_first_day_of_month_and_next(month: int, year: int):
+    month_datetime = get_first_day_of_month(month, year)
+    if month < 12:
+        next_datetime = get_first_day_of_month(month + 1, year)
+    else:
+        next_datetime = get_first_day_of_month(1, year + 1)
+    print([month_datetime, next_datetime])
+    return [month_datetime, next_datetime]
+
+
 def today():
     return dt.date.today()
 
