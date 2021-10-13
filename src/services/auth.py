@@ -1,7 +1,9 @@
+import os
+
 from services.constants import DEFAULT_USER, DEFAULT_PASSWORD
 
-_user = DEFAULT_USER
-_password = DEFAULT_PASSWORD
+_user = os.environ.get('POSTGRESQL_USER', DEFAULT_USER)
+_password = os.environ.get('POSTGRESQL_PASSWORD', DEFAULT_PASSWORD)
 
 
 def get_credentials():
@@ -12,3 +14,4 @@ def set_credentials(user: str = _user, password: str = _password):
     global _user, _password
     _user = user
     _password = password
+    
