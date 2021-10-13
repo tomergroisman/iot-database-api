@@ -38,8 +38,8 @@ def _calculate(measurements, func):
 
 
 def _get_bin_index(hour, minute):
-    if minute >= 15 and minute < 45:
-        return hour * 2 + 1
-    if minute > 45:
-        return ((hour + 1) * 2) % 48
-    return hour
+    if minute < 15:
+        return hour * 2
+    if minute < 45:
+        return (hour * 2) + 1
+    return ((hour + 1) * 2) % 48
