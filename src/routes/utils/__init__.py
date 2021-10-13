@@ -1,6 +1,10 @@
+import os
 from flask import Blueprint, request
+from dotenv import load_dotenv
 
 from services.auth import set_credentials
+
+load_dotenv()
 
 utils = Blueprint('utils', __name__)
 
@@ -24,13 +28,17 @@ def config():
         password (string): The PostgreSQL password
     }
     """
-    body = request.get_json()
+    auth_key = request.headers.get('Authorization')
 
-    user = body.get('user')
-    password = body.get('password')
+    if os.environ.get('CONFIG_KEY') == auth_key:
+        body = request.get_json()
 
-    kwargs = dict(user=user, password=password)
-    kwargs = {k: v for k, v in kwargs.items() if v is not None}
-    set_credentials(**kwargs)
+        user = body.get('user')
+        password = body.get('password')
 
-    return f'Successfully set credentials: {", ".join(kwargs.keys())}'
+        kwargs = dict(user=user, password=password)
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        set_credentials(**kwargs)
+
+        return f'Successfully set credentials: {", ".join(kwargs.keys())}'
+    return f'Auth key is not valid', 401
