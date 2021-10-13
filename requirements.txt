@@ -5,4 +5,5 @@ matplotlib
 numpy
 requests
 gunicorn
+python-dotenv
 git+https://github.com/tomergroisman/postgresql-python.git

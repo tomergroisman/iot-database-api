@@ -10,7 +10,6 @@ def values_to_time_bins(measurements):
         timestamp = measurement.get('timestamp')
         if timestamp:
             bin_index = _get_bin_index(timestamp.hour, timestamp.minute)
-            print(bin_index)
             bins[bin_index].append(measurement)
     return bins
 
