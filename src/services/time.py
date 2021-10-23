@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 def timestamp_to_dec(timestamp: datetime):
-    hour, minute, second = timestamp.strftime("%H:%M:%S").split(":")
+    hour, minute, second = timestamp.strftime('%H:%M:%S').split(':')
     time = int(hour) + int(minute) / 60 + int(second) / 6000
     return time
 
@@ -13,7 +13,7 @@ def date(timetamp: str):
 
 
 def get_first_day_of_month(month: int, year: int):
-    return date(f"01-{month}-{year}")
+    return date(f'01-{month}-{year}')
 
 
 def get_first_day_of_month_and_next(month: int, year: int):

@@ -41,4 +41,4 @@ def config():
         set_credentials(**kwargs)
 
         return f'Successfully set credentials: {", ".join(kwargs.keys())}'
-    return f'Auth key is not valid', 401
+    return 'Auth key is not valid', 401

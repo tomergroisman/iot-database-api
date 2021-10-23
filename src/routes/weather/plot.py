@@ -14,10 +14,10 @@ from .constants import (
 
 def get_weather_measurements_plot():
     measurements_dict = {
-        "times": [],
-        "temperatures": [],
-        "humidities": [],
-        "heat_indexes": []
+        'times': [],
+        'temperatures': [],
+        'humidities': [],
+        'heat_indexes': []
     }
 
     scope = request.args.get('scope')
@@ -27,10 +27,10 @@ def get_weather_measurements_plot():
 
     measurements_scope = {
         'today': {
-            "db_name": db_name,
-            "table_name": table_name,
-            "columns": None,
-            "filter_query": f"timestamp >= '{today()}' AND timestamp < '{tommororow()}'"
+            'db_name': db_name,
+            'table_name': table_name,
+            'columns': None,
+            'filter_query': f"timestamp >= '{today()}' AND timestamp < '{tommororow()}'"
         }
     }
 
@@ -50,26 +50,26 @@ def get_weather_measurements_plot():
         measurements = get_instances(db_name, table_name, None, None)
 
     for measurement in measurements:
-        time = timestamp_to_dec(measurement["timestamp"])
-        temperature = measurement["temperature"]
-        humidity = measurement["humidity"]
-        heat_index = measurement["heat_index"]
+        time = timestamp_to_dec(measurement['timestamp'])
+        temperature = measurement['temperature']
+        humidity = measurement['humidity']
+        heat_index = measurement['heat_index']
 
-        measurements_dict["times"].append(time)
-        measurements_dict["temperatures"].append(temperature)
-        measurements_dict["humidities"].append(humidity)
-        measurements_dict["heat_indexes"].append(heat_index)
+        measurements_dict['times'].append(time)
+        measurements_dict['temperatures'].append(temperature)
+        measurements_dict['humidities'].append(humidity)
+        measurements_dict['heat_indexes'].append(heat_index)
 
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     if plot == 'line':
-        axis.plot(measurements_dict["times"], measurements_dict["temperatures"], label='Temperature')
-        axis.plot(measurements_dict["times"], measurements_dict["humidities"], label='Humidity')
-        axis.plot(measurements_dict["times"], measurements_dict["heat_indexes"], label='Heat Index')
+        axis.plot(measurements_dict['times'], measurements_dict['temperatures'], label='Temperature')
+        axis.plot(measurements_dict['times'], measurements_dict['humidities'], label='Humidity')
+        axis.plot(measurements_dict['times'], measurements_dict['heat_indexes'], label='Heat Index')
     if plot == 'scatter':
-        axis.scatter(measurements_dict["times"], measurements_dict["temperatures"], s=5, label='Temperature')
-        axis.scatter(measurements_dict["times"], measurements_dict["humidities"], s=5, label='Humidity')
-        axis.scatter(measurements_dict["times"], measurements_dict["heat_indexes"], s=5, label='Heat Index')
+        axis.scatter(measurements_dict['times'], measurements_dict['temperatures'], s=5, label='Temperature')
+        axis.scatter(measurements_dict['times'], measurements_dict['humidities'], s=5, label='Humidity')
+        axis.scatter(measurements_dict['times'], measurements_dict['heat_indexes'], s=5, label='Heat Index')
 
     axis.legend()
     axis.set_xlim([0, 24])
@@ -87,13 +87,13 @@ def get_manipulated_data_plot(data, plot='line'):
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
     if plot == 'line':
-        axis.plot(times, data["temperatures"], label='Temperature')
-        axis.plot(times, data["humidities"], label='Humidity')
-        axis.plot(times, data["heat_indexes"], label='Heat Index')
+        axis.plot(times, data['temperatures'], label='Temperature')
+        axis.plot(times, data['humidities'], label='Humidity')
+        axis.plot(times, data['heat_indexes'], label='Heat Index')
     if plot == 'scatter':
-        axis.scatter(times, data["temperatures"], s=5, label='Temperature')
-        axis.scatter(times, data["humidities"], s=5, label='Humidity')
-        axis.scatter(times, data["heat_indexes"], s=5, label='Heat Index')
+        axis.scatter(times, data['temperatures'], s=5, label='Temperature')
+        axis.scatter(times, data['humidities'], s=5, label='Humidity')
+        axis.scatter(times, data['heat_indexes'], s=5, label='Heat Index')
 
     axis.legend()
     axis.set_xlim([0, 24])

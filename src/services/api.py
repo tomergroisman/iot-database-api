@@ -168,7 +168,7 @@ def get_instances_api(
 
         if additional_filters is not None:
             if filter_query is not None:
-                filter_query += f" AND {additional_filters}"
+                filter_query += f' AND {additional_filters}'
             else:
                 filter_query = additional_filters
 

@@ -1,7 +1,7 @@
 import numpy as np
 import warnings
 
-warnings.simplefilter("ignore")
+warnings.simplefilter('ignore')
 
 
 def values_to_time_bins(measurements):
@@ -30,9 +30,9 @@ def _calculate(measurements, func):
         humidities.append(func([measurement.get('humidity') for measurement in measurements]))
         heat_indexes.append(func([measurement.get('heat_index') for measurement in measurements]))
     return {
-        "temperatures": temperatures,
-        "humidities": humidities,
-        "heat_indexes": heat_indexes
+        'temperatures': temperatures,
+        'humidities': humidities,
+        'heat_indexes': heat_indexes
     }
 
 

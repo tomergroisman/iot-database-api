@@ -1,6 +1,7 @@
 psycopg2
 flask
 flake8
+flake8-quotes
 matplotlib
 numpy
 requests
