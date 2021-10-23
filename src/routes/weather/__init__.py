@@ -3,7 +3,7 @@ from routes.weather.data_manipulation import calculate_average
 from routes.weather.plot import get_manipulated_data_plot, get_weather_measurements_plot
 from routes.weather.utils import get_interval_query, get_month_measurements_query
 
-from services.api import get_instances_api, init_database_api, insert_instance_api
+from services.api import get_instances_api, get_last_instance_api, init_database_api, insert_instance_api
 from services.extarctors import extract_data_from_body
 from services.postgres import get_instances
 
@@ -60,6 +60,20 @@ def get_weather_instances():
     end = request.args.get('end')
     additional_query = get_interval_query(start, end)
     return get_instances_api(db_name, table_name, additional_query)
+
+
+@weather.route('/last', methods=['GET'])
+def get_last_instance():
+    """
+    GET /weather/last
+    Get the last instance from measurements table in the weather database
+
+    - *query* (req): {
+        columns (string): The columns to filter
+    }
+
+    """
+    return get_last_instance_api(db_name, table_name)
 
 
 @weather.route('/plot', methods=['GET'])

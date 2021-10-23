@@ -177,3 +177,31 @@ def get_instances_api(
 
     except Exception as e:
         return f'There was an issue with the provided parameters:\n{e}', 400
+
+
+def get_last_instance_api(
+    db_name: str,
+    table_name: str,
+):
+    """
+    Get the last instance from a table in a database and return it a response
+
+    - *db_name* (string): The new database name
+    - *table_name* (string): the new table name
+
+    """
+    try:
+        columns = request.args.get('columns')
+        filter_query = '1=1 ORDER BY timestamp DESC LIMIT 1'
+
+        results = get_instances(db_name, table_name, columns, filter_query)
+
+        try:
+            results = results[0]
+        except IndexError:
+            results = None
+
+        return jsonify(results)
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400
