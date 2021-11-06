@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 import warnings
 
 from routes.utils import utils
@@ -9,6 +10,8 @@ warnings.simplefilter('ignore')
 
 # Create Flask instance
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # utils routes
 app.register_blueprint(utils, url_prefix='/utils')
