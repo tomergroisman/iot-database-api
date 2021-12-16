@@ -98,11 +98,11 @@ def insert_instance(
 def get_instances(
     db_name: str,
     table_name: str,
-    columns: str,
-    filter_query: str,
-    order: str,
-    limit: str,
-    offset: str,
+    columns: str = None,
+    filter_query: str = None,
+    order: str = None,
+    limit: str = None,
+    offset: str = None,
 ):
     """
     Create a new instance in a database table

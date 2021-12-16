@@ -3,6 +3,7 @@ from flask import request, jsonify
 from typing import List
 from postgresql_python.types import Column, ForignKey, Instance
 
+from services.time import today, tommororow
 from services.postgres import (
     create_database,
     create_table,
@@ -153,6 +154,7 @@ def get_instances_api(
     db_name: str,
     table_name: str,
     additional_filters: str,
+    order: str,
 ):
     """
     Get instances from a table in a database and return it a response
@@ -172,25 +174,20 @@ def get_instances_api(
         limit = request.args.get('limit')
         offset = request.args.get('offset')
 
-        reverse = request.args.get('reverse')
-
         if additional_filters is not None:
             if filter_query is not None:
                 filter_query += f' AND {additional_filters}'
             else:
                 filter_query = additional_filters
 
-        if reverse:
-            reverse = 'id ASC'
-
         results = get_instances(
             db_name=db_name,
             table_name=table_name,
             columns=columns,
             filter_query=filter_query,
-            offset=reverse,
+            order=order,
             limit=limit,
-            offset=offset
+            offset=offset,
         )
         return jsonify(results)
 
@@ -203,7 +200,7 @@ def get_last_instance_api(
     table_name: str,
 ):
     """
-    Get the last instance from a table in a database and return it a response
+    Get the last instance from a table in a database and return it as a response
 
     - *db_name* (string): The new database name
     - *table_name* (string): the new table name
@@ -211,14 +208,48 @@ def get_last_instance_api(
     """
     try:
         columns = request.args.get('columns')
-        filter_query = '1=1 ORDER BY timestamp DESC LIMIT 1'
+        order = 'timestamp DESC'
+
+        results = get_instances(
+            db_name=db_name,
+            table_name=table_name,
+            columns=columns,
+            order=order,
+            limit=1
+        )
+
+        try:
+            results = results[0]
+        except IndexError:
+            results = None
+
+        return jsonify(results)
+
+    except Exception as e:
+        return f'There was an issue with the provided parameters:\n{e}', 400
+
+
+def get_today_instances_api(
+    db_name: str,
+    table_name: str,
+):
+    """
+    Get the todays instances from a table in a database and return it as a response
+
+    - *db_name* (string): The new database name
+    - *table_name* (string): the new table name
+
+    """
+    try:
+        columns = request.args.get('columns')
+        filter_query = f"timestamp >= '{today()}' AND timestamp < '{tommororow()}'"
 
         results = get_instances(db_name, table_name, columns, filter_query)
 
         try:
             results = results[0]
         except IndexError:
-            results = None
+            results = []
 
         return jsonify(results)
 
