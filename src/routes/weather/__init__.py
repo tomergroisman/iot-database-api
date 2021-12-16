@@ -69,7 +69,7 @@ def get_weather_instances():
     start = request.args.get('start')
     end = request.args.get('end')
     additional_query = get_interval_query(start, end)
-    order = 'timestamp ASC' if request.args.get('reverse') else None
+    order = 'timestamp DESC' if request.args.get('reverse') else None
     return get_instances_api(
         db_name=db_name,
         table_name=table_name,
