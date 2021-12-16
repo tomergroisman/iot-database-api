@@ -1,4 +1,5 @@
 from flask import Blueprint, Response, request
+from flask.json import jsonify
 from routes.weather.data_manipulation import calculate_average
 from routes.weather.plot import get_manipulated_data_plot, get_weather_measurements_plot
 from routes.weather.utils import get_interval_query, get_month_measurements_query
@@ -138,5 +139,9 @@ def get_average():
     filter_query = get_month_measurements_query(month, year)
     measurements = get_instances(db_name, table_name, '*', filter_query)
     data = calculate_average(measurements)
-    plot = get_manipulated_data_plot(data)
-    return Response(plot, mimetype='image/png')
+
+    if request.args.get('plot'):
+        plot = get_manipulated_data_plot(data)
+        return Response(plot, mimetype='image/png')
+
+    return jsonify(data)
