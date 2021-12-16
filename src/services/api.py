@@ -160,11 +160,19 @@ def get_instances_api(
     - *db_name* (string): The new database name
     - *table_name* (string): the new table name
     - *additional_filters* (string): Additional filter query
+    - *limit* (int): Limitation number of result
+    - *offset* (int): Offset from the first instance
+    - *reverse* (bool): Return the results in reverse order
 
     """
     try:
         columns = request.args.get('columns')
         filter_query = request.args.get('filter')
+
+        limit = request.args.get('limit')
+        offset = request.args.get('offset')
+
+        reverse = request.args.get('reverse')
 
         if additional_filters is not None:
             if filter_query is not None:
@@ -172,7 +180,18 @@ def get_instances_api(
             else:
                 filter_query = additional_filters
 
-        results = get_instances(db_name, table_name, columns, filter_query)
+        if reverse:
+            reverse = 'id ASC'
+
+        results = get_instances(
+            db_name=db_name,
+            table_name=table_name,
+            columns=columns,
+            filter_query=filter_query,
+            offset=reverse,
+            limit=limit,
+            offset=offset
+        )
         return jsonify(results)
 
     except Exception as e:

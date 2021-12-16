@@ -99,7 +99,10 @@ def get_instances(
     db_name: str,
     table_name: str,
     columns: str,
-    filter_query: str
+    filter_query: str,
+    order: str,
+    limit: str,
+    offset: str,
 ):
     """
     Create a new instance in a database table
@@ -107,10 +110,13 @@ def get_instances(
     - *db_name*: The database name
     - *table_name*: The table name
     - *filter_query*: A PostgreSQL filter query
+    - *order* (bool): Return the results in reverse order
+    - *limit* (int): Limitation number of result
+    - *offset* (int): Offset from the first instance
 
     """
     credentials = get_credentials()
-    kwargs = dict(columns=columns, filter=filter_query)
+    kwargs = dict(columns=columns, filter=filter_query, order=order, limit=limit, offset=offset)
     kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
     postgres = PostgreSQL(**credentials, db_name=db_name)

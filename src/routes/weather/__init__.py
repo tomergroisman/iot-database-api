@@ -53,6 +53,9 @@ def get_weather_instances():
         filter (string): PostgreSQL filter query
         start (string): Start date (dd-mm-yyy form)
         end (string): End date (dd-mm-yyy form)
+        limit (number): Limitation number of result
+        offset (number): Offset from the first instance
+        reverse (bool): Return the results in reverse order
     }
 
     """
