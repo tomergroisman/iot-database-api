@@ -247,7 +247,7 @@ def get_today_instances_api(
         results = get_instances(db_name, table_name, columns, filter_query)
 
         try:
-            results = results[0]
+            results = results
         except IndexError:
             results = []
 
